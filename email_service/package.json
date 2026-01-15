@@ -1,0 +1,11 @@
+{
+    "name": "email-service",
+    "version": "1.0.0",
+    "description": "Serverless email service",
+    "dependencies": {},
+    "devDependencies": {
+        "serverless": "^3.38.0",
+        "serverless-offline": "^13.3.3",
+        "serverless-python-requirements": "^6.0.0"
+    }
+}

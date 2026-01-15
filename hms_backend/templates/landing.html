@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome - Mini HMS{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h1 class="hero-title">Healthcare Management <br> Reimagined</h1>
+    <p class="hero-subtitle">
+        Experience seamless doctor appointments and real-time availability tracking.
+        Built for modern healthcare professionals and patients.
+    </p>
+
+    <div style="display: flex; gap: 1rem; justify-content: center;">
+        <a href="{% url 'patient_signup' %}" class="btn btn-primary">
+            I'm a Patient
+        </a>
+        <a href="{% url 'doctor_signup' %}" class="btn btn-outline">
+            I'm a Doctor
+        </a>
+    </div>
+</div>
+
+<div class="grid" style="margin-top: 4rem;">
+    <div class="glass-card">
+        <div style="font-size: 2rem; margin-bottom: 1rem; color: var(--primary);">🏥</div>
+        <h3>Instant Booking</h3>
+        <p style="color: var(--text-muted);">Find doctors and book slots instantly with our real-time race-condition
+            free engine.</p>
+    </div>
+
+
+
+    <div class="glass-card">
+        <div style="font-size: 2rem; margin-bottom: 1rem; color: var(--accent);">🔐</div>
+        <h3>Secure & Private</h3>
+        <p style="color: var(--text-muted);">Your health data is protected with enterprise-grade security and role-based
+            access.</p>
+    </div>
+</div>
+{% endblock %}

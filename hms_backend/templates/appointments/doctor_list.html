@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Find a Doctor{% endblock %}
+
+{% block content %}
+<div>
+    <h1 class="title">Find a Doctor</h1>
+    <p style="color: var(--text-muted); margin-bottom: 2rem; max-width: 600px;">Browse our list of specialists and book
+        an appointment instantly. No phone calls required.</p>
+
+    {% if doctors %}
+    <div class="grid">
+        {% for doctor in doctors %}
+        <div class="glass-card" style="margin-bottom: 0;">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                <div
+                    style="background: linear-gradient(135deg, var(--primary), var(--secondary)); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.25rem;">
+                    {{ doctor.username|make_list|first|upper }}
+                </div>
+                <div>
+                    <h3 style="margin: 0;">Dr. {{ doctor.username }}</h3>
+                    <p style="color: var(--primary); font-weight: 500; margin: 0;">
+                        {{ doctor.doctor_profile.specialization }}
+                    </p>
+                </div>
+            </div>
+
+            <p style="color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.6;">
+                {{ doctor.doctor_profile.bio|truncatechars:120 }}
+            </p>
+
+            <h4
+                style="font-size: 0.9rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em; margin-bottom: 0.75rem;">
+                Available Slots</h4>
+            {% if doctor.availabilities.all %}
+            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                {% for slot in doctor.availabilities.all %}
+                {% if not slot.is_booked %}
+                <form action="{% url 'book_appointment' slot.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="tag tag-success"
+                        style="border: none; cursor: pointer; transition: transform 0.2s;"
+                        onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                        {{ slot.start_time|date:"M d" }} • {{ slot.start_time|time:"H:i" }}
+                    </button>
+                </form>
+                {% endif %}
+                {% endfor %}
+            </div>
+            {% else %}
+            <p style="font-size: 0.875rem; color: #9ca3af; font-style: italic;">No available slots at the moment.</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="glass-card" style="text-align: center; padding: 4rem;">
+        <p style="font-size: 1.25rem; color: var(--text-muted);">No doctors have registered yet.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

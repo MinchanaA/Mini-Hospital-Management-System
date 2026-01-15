@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h1 class="title">Dashboard</h1>
+
+{% if user.is_doctor %}
+<div class="glass-card" style="border-left: 4px solid var(--primary);">
+    <h3>Doctor Portal</h3>
+    <p>Welcome back, <span style="font-weight: 700;">Dr. {{ user.username }}</span></p>
+    {% if user.doctor_profile %}
+    <p class="tag" style="background: rgba(79, 70, 229, 0.1); color: var(--primary);">
+        {{ user.doctor_profile.specialization }}
+    </p>
+    {% endif %}
+</div>
+
+<div>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h2>Your Availability</h2>
+        <a href="{% url 'add_availability' %}" class="btn btn-primary">Add Time Slot</a>
+    </div>
+
+    {% if availabilities %}
+    <div class="grid">
+        {% for slot in availabilities %}
+        <div class="glass-card {% if slot.is_booked %}status-border-booked{% else %}status-border-available{% endif %}"
+            style="margin-bottom: 0; padding: 1.5rem;">
+            <p style="font-weight: 600; font-size: 1.1rem; margin-bottom: 0.5rem;">
+                {{ slot.start_time|date:"M d, Y" }}
+            </p>
+            <p style="color: var(--text-muted); margin-bottom: 1rem;">
+                {{ slot.start_time|time:"H:i" }} - {{ slot.end_time|time:"H:i" }}
+            </p>
+            <span class="tag {% if slot.is_booked %}tag-error{% else %}tag-success{% endif %}">
+                {% if slot.is_booked %}Booked{% else %}Available{% endif %}
+            </span>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="glass-card" style="text-align: center;">
+        <p style="color: var(--text-muted);">No availability slots added yet.</p>
+    </div>
+    {% endif %}
+</div>
+
+{% elif user.is_patient %}
+<div class="glass-card" style="border-left: 4px solid var(--secondary);">
+    <h3>Patient Portal</h3>
+    <p>Welcome back, <span style="font-weight: 700;">{{ user.username }}</span></p>
+</div>
+
+<div>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h2>Your Appointments</h2>
+        <a href="{% url 'doctor_list' %}" class="btn btn-primary">Find Doctors & Book</a>
+    </div>
+
+    {% if appointments %}
+    <div class="grid">
+        {% for appt in appointments %}
+        <div class="glass-card" style="margin-bottom: 0; padding: 1.5rem; position: relative; overflow: hidden;">
+            <div
+                style="position: absolute; top: 0; right: 0; background: var(--success-bg); color: var(--success-text); padding: 0.25rem 1rem; border-bottom-left-radius: 1rem; font-size: 0.8rem; font-weight: 600;">
+                Confirmed</div>
+
+            <h3 style="margin-top: 0;">Dr. {{ appt.availability.doctor.username }}</h3>
+            <p style="color: var(--primary); font-weight: 500; margin-bottom: 0.5rem;">
+                {{ appt.availability.doctor.doctor_profile.specialization }}
+            </p>
+
+            <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--glass-border);">
+                <p style="font-weight: 700; color: var(--text-main);">
+                    {{ appt.availability.start_time|date:"M d, Y" }}
+                </p>
+                <p style="color: var(--text-muted);">
+                    {{ appt.availability.start_time|time:"H:i" }} - {{ appt.availability.end_time|time:"H:i" }}
+                </p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="glass-card" style="text-align: center;">
+        <p style="color: var(--text-muted);">No upcoming appointments.</p>
+        <a href="{% url 'doctor_list' %}" class="btn btn-outline" style="margin-top: 1rem;">Find a Doctor</a>
+    </div>
+    {% endif %}
+</div>
+
+{% endif %}
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Availability{% endblock %}
+
+{% block content %}
+<div style="max-width: 500px; margin: 0 auto;">
+    <div class="glass-card">
+        <h2 class="title" style="text-align: center;">New Time Slot</h2>
+        <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">Set a time when patients can book
+            appointments.</p>
+
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="form-group">
+                <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                <div style="color: var(--error-text); font-size: 0.875rem; margin-top: 0.25rem;">{{ field.errors }}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                <a href="{% url 'dashboard' %}" class="btn btn-outline"
+                    style="flex: 1; justify-content: center; text-decoration: none;">Cancel</a>
+                <button type="submit" class="btn btn-primary" style="flex: 1;">Save Slot</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('input').forEach(element => {
+        element.classList.add('form-control');
+    });
+</script>
+{% endblock %}
